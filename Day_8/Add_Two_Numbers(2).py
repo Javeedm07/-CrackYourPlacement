@@ -1,27 +1,34 @@
 """
 Intuition:
-The code adds two numbers represented by linked lists `l1` and `l2`. It iteratively sums corresponding digits from both lists along with any carry from the previous 
-digit, creating new nodes for the result list. A dummy head node is used to simplify list construction, and the process continues until all digits and any remaining 
-carry are processed. The resulting linked list represents the sum of the two input numbers in reverse order.
+The code adds two numbers represented by linked lists `l1` and `l2`, where each node contains a single digit and the digits are stored in reverse order. It converts
+the linked lists into integer numbers (`n1` and `n2`) by traversing each list, multiplies each digit by the appropriate power of 10, and then sums these integers. 
+The sum is then converted back to a string, reversed, and used to construct a new linked list representing the sum in reverse order. The result is returned as a 
+new linked list.
 """
 
 class Solution:
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
         p1, p2 = l1, l2
-        carry = 0
+        n1, n2 = 0, 0
+        x = 1
+        while p1 != None:
+            n1 = n1 + p1.val * x
+            x = x * 10
+            p1 = p1.next
+        x = 1
+        while p2 != None:
+            n2 = n2 + p2.val * x
+            x = x * 10
+            p2 = p2.next
+        ans = str(n1 + n2)[::-1]
+        if ans == "0":
+            head = ListNode(ans)
+            return head
+
         dummy = ListNode(0)
         curr = dummy
-        while p1 != None or p2 != None:
-            s = carry
-            if p1 != None:
-                s += p1.val
-                p1 = p1.next
-            if p2 != None:
-                s += p2.val
-                p2 = p2.next
-            carry = s // 10
-            curr.next = ListNode(s % 10)
-            curr = curr.next
-        if carry != 0:
-            curr.next = ListNode(carry)
+        for i in ans:
+                curr.next = ListNode(int(i))
+                curr = curr.next
         return dummy.next
+        
